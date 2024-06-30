@@ -2,8 +2,8 @@
 
 // config for Pages/Pages
 return [
-    "available_locales" => [
-        "it",
-        "en"
+    "locale_translations" => [
+        "en",
+        "es",
     ]
 ];
