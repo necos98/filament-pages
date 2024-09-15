@@ -5,16 +5,20 @@ namespace Pages\Filament\Resources;
 use App\Filament\Resources\PatientResource\RelationManagers;
 use Filament\Forms;
 use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
+use Pages\Facades\Pages;
 use Pages\Filament\Resources\StaticPageResource\RelationManagers\PageRelationManager;
+use Pages\Filament\Support\StaticPageResource as SupportStaticPageResource;
 use Pages\Models\Page;
 use Pages\Models\StaticPage;
 
-class StaticPageResource extends Resource
+class StaticPageResource extends SupportStaticPageResource
 {
     protected static ?string $model = StaticPage::class;
 
@@ -22,46 +26,27 @@ class StaticPageResource extends Resource
 
     public static function form(Form $form): Form
     {
+
+        $views = collect(Pages::getViews())->map(function ($view) {
+            return [
+                'value' => $view,
+                'name' => $view,
+            ];
+        })->pluck("value", "name");
+
         return $form
             ->schema([
-                Fieldset::make('Info pagina')
-                    ->relationship('page')
-                    ->schema([
-                        Forms\Components\TextInput::make('slug')
-                            ->label("Slug")
-                            ->required()
-                            ->columnSpan(2)
-                            ->unique(ignoreRecord: true),
-                        Forms\Components\TextInput::make('title')
-                            ->label("Titolo")
-                            ->required()
-                            ->columnSpan(2),
-                        Forms\Components\Textarea::make('description')
-                            ->label("Descrizione SEO")
-                            ->required()
-                            ->columnSpanFull(),
-                        Forms\Components\Select::make('parent_id')
-                            ->relationship(name: 'parent', titleAttribute: 'url', ignoreRecord: true)
-                            ->searchable()
-                            ->preload(),
-                        Forms\Components\ToggleButtons::make('status')
-                            ->label("Stato")
-                            ->options([
-                                'draft' => 'In bozza',
-                                'scheduled' => 'Schedulato',
-                                'published' => 'Pubblicato'
-                            ])->inline()
-                            ->default("draft")
-                    ]),
-                // Forms\Components\TextInput::make('page.title'),
-                // Forms\Components\TextInput::make('page.description'),
                 Forms\Components\RichEditor::make('text_1')
                     ->label("Testo 1")
                     ->required()
                     ->rules(
                         "string"
                     )
-                    ->columnSpan("12"),
+                    ->columnSpan("12")
+                    ->translate(),
+
+                Select::make('view')
+                    ->options($views),
                 Forms\Components\DatePicker::make('published_at')
                     ->label("Pubblicato il")
                 // Forms\Components\RichEditor::make('text_2')
@@ -109,10 +94,15 @@ class StaticPageResource extends Resource
 
     public static function getPages(): array
     {
+
+        // dd(\Pages\Filament\Support\CreateOrUpdateTranslation::routePath());
+
         return [
             'index' => \Pages\Filament\Resources\StaticPageResource\Pages\ListStaticPage::route('/'),
             'create' => \Pages\Filament\Resources\StaticPageResource\Pages\CreateStaticPage::route('/create'),
             'edit' => \Pages\Filament\Resources\StaticPageResource\Pages\EditStaticPage::route('/{record}/edit'),
+            // 'translate' => \Pages\Filament\Resources\StaticPageResource\Pages\TranslateStaticPage::translationRoute(),
+            'translate' => \Pages\Filament\Resources\StaticPageResource\Pages\TranslateStaticPage::route('/{record}/translate/{lang}'),
         ];
     }
 }

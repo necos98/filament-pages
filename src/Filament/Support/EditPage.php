@@ -3,9 +3,12 @@
 namespace Pages\Filament\Support;
 
 use Filament\Resources\Pages\EditRecord as PagesEditRecord;
+use Pages\Traits\HasHeaderActions;
 
 class EditPage extends PagesEditRecord
 {
+    use HasHeaderActions;
+
     protected function getForms(): array
     {
 

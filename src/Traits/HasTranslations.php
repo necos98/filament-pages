@@ -5,6 +5,7 @@ namespace Pages\Traits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Pages\Facades\Pages;
 use Pages\Models\ModelTranslation;
 use Pages\Models\Page;
 
@@ -14,9 +15,9 @@ trait HasTranslations
     {
         // static::saving();
 
-        // static::deleted(function (Model $model) {
-        //     $model->page->forceDelete();
-        // });
+        static::deleted(function (Model $model) {
+            $model->forceDeleteAll();
+        });
     }
 
     public function translations(string $lang): MorphMany
@@ -42,7 +43,7 @@ trait HasTranslations
             foreach ($translatedFields as $field) {
                 $this->{$field->key} = $field->value;
             }
-        }else{
+        } else {
             return null;
         }
 
@@ -65,6 +66,13 @@ trait HasTranslations
             ], [
                 "value" => $value
             ]);
+        }
+    }
+
+    public function forceDeleteAll()
+    {
+        foreach (Pages::getLocaleTranslations() as $lang) {
+            $this->translations($lang)?->forceDelete();
         }
     }
 }

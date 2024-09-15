@@ -1,17 +1,18 @@
 <?php
 
-namespace Pages\Filament\Resources\StaticPageResource\Pages;
+namespace Pages\Filament\Resources\BuildablePageResource\Pages;
 
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Pages\Filament\Resources\BuildablePageResource;
 use Pages\Filament\Resources\StaticPageResource;
 use Pages\Filament\Support\EditPage;
 use Pages\Models\Page;
 use Pages\Models\StaticPage;
 
-class EditStaticPage extends EditPage
+class EditBuildablePage extends EditPage
 {
-    protected static string $resource = StaticPageResource::class;
+    protected static string $resource = BuildablePageResource::class;
 
     protected function getHeaderActions(): array
     {

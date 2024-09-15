@@ -5,7 +5,10 @@ namespace Pages\Filament\Support;
 use Filament\Forms;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Pages\Filament\Forms\Components\Slug;
+use Illuminate\Support\Str;
 
 class StaticPageResource extends Resource
 {
@@ -16,8 +19,11 @@ class StaticPageResource extends Resource
             Forms\Components\TextInput::make('slug')
                 ->label("Slug")
                 ->required()
-                ->columnSpan(2),
-            // ->unique(ignoreRecord: true),
+                ->columnSpan(2)
+                ->afterStateUpdated(function (Set $set, ?string $state) {
+                    $set('slug', Str::slug($state, "-"));
+                }),
+
             Forms\Components\TextInput::make('title')
                 ->label("Titolo")
                 ->required()

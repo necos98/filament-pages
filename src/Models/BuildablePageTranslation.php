@@ -10,18 +10,9 @@ use Pages\Interfaces\PageInterface;
 use Pages\Traits\HasPages;
 use Pages\Traits\HasTranslations;
 
-class StaticPage extends Model implements PageInterface
+class BuildablePageTranslation extends Model
 {
-    use HasPages, HasTranslations;
-
-    protected $fillable = ['text_1', 'text_2', 'text_3'];
-
-    public array $translableFields = [
-        "text_1"
+    protected $casts = [
+        'value' => 'json'
     ];
-
-    public function pageController(): string
-    {
-        return StaticPageController::class;
-    }
 }

@@ -3,14 +3,14 @@
 namespace Pages\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Pages\Models\Page;
+use Illuminate\Contracts\View\View;
 use Pages\Models\StaticPage;
+use Pages\Support\Page;
 
-class StaticPageController extends Controller
+class StaticPageController extends Page
 {
-    public function handle(StaticPage $staticPage)
+    protected function content(): View
     {
-
-        return $staticPage->text_1;
+        return view($this->bindedModel->view);
     }
 }

@@ -2,12 +2,15 @@
 
 namespace Pages;
 
+use Filament\Forms\Components\Field;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -60,15 +63,17 @@ class PagesServiceProvider extends PackageServiceProvider
         $this->loadMigrationsFrom(__DIR__ . "/../database/migrations");
     }
 
-    public function packageRegistered(): void
-    {
-    }
+    public function packageRegistered(): void {}
 
     public function bootingPackage()
     {
 
         $this->app->booted(function () {
             $this->loadRoutesFrom(__DIR__ . "/../routes/web.php");
+        });
+
+        Field::macro("translate", function (bool $translate = true) {
+            return $this->extraAttributes(["translate" => $translate]);
         });
     }
 
@@ -100,6 +105,15 @@ class PagesServiceProvider extends PackageServiceProvider
 
         // Testing
         Testable::mixin(new TestsPages());
+
+
+
+        // FilamentView::registerRenderHook(
+        //     PanelsRenderHook::PAGE_HEADER_ACTIONS_BEFORE,
+        //     function($scopes){
+        //         dd($scopes);
+        //     },
+        // );
     }
 
     protected function getAssetPackageName(): ?string

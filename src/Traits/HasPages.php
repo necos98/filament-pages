@@ -11,7 +11,7 @@ trait HasPages
     public static function bootHasPages()
     {
         static::deleted(function (Model $model) {
-            $model->page->forceDelete();
+            $model->page?->forceDelete();
         });
     }
 

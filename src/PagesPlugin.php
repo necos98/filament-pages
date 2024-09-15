@@ -5,6 +5,7 @@ namespace Pages;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Pages\Filament\Resources\BuildablePageResource;
 use Pages\Filament\Resources\StaticPageResource;
 
 class PagesPlugin implements Plugin
@@ -20,9 +21,11 @@ class PagesPlugin implements Plugin
  
     public function register(Panel $panel): void
     {
+        // dd("a");
         $panel
             ->resources([
-                StaticPageResource::class
+                StaticPageResource::class,
+                // BuildablePageResource::class
                 // PostResource::class,
                 // CategoryResource::class,
             ])
